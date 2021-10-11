@@ -34,16 +34,33 @@ async function buses() {
             let lat = autobus[i].latitude
             let long = autobus[i].longitude
             let id = autobus[i].id
-            L.marker([lat, long]).bindPopup(`Este es el id: ${id}`).addTo(map)
+            L.marker([lat, long]).bindPopup(`Este es el id del autobús: ${id}`).addTo(map)
         } 
         
     }
     catch{}
 }
 
+async function trenes() {
+    try {
+        let response = await fetch('https://api.metro.net/agencies/lametro-rail/vehicles')
+        let data = await response.json()
+        let tren = await data.items
+        for(let i = 0; i < tren.length; i++) {
+            let lat = tren[i].latitude
+            let long = tren[i].longitude
+            let id = tren[i].id
+            L.marker([lat, long]).bindPopup(`Este es el id del metro: ${id}`).addTo(map)
+        }
+        
+    }
+    catch {}
+}
+
 buses()
+trenes()
 
 
-//    fetch('https://api.metro.net/agencies/lametro/vehicles')
+//    fetch('https://api.metro.net/agencies/lametro-rail/vehicles')
 //     .then(res => res.json())
 //     .then(json => console.log(json))
