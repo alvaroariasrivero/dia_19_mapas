@@ -1,5 +1,5 @@
 const mapId = 'map';
-const initialCoordinates = [40.4169473, -3.7057172] // Estas son de Madrid // Plaza del Sol en Madrid [lat, lng]
+const initialCoordinates = [34.0194, -118.411] //[40.4169473, -3.7057172] // Estas son de Madrid // Plaza del Sol en Madrid [lat, lng]
 const map = L.map(mapId).setView(initialCoordinates, 13);
 
 const MAPBOX_API = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}'
@@ -17,8 +17,33 @@ L.tileLayer(MAPBOX_API, {
   }).addTo(map);
 
 
-navigator.geolocation.getCurrentPosition(position => {
-        L.marker([position.coords.latitude, position.coords.longitude]).bindPopup("En verdad no estás aquí, pero casi").addTo(map);
-    }, error => {
-       console.warn(`Error! - ${error}`);
-   });
+// navigator.geolocation.getCurrentPosition(position => {
+//     console.log(position)
+//         L.marker([position.coords.latitude, position.coords.longitude]).bindPopup("En verdad no estás aquí, pero casi").addTo(map);
+//     }, error => {
+//        console.warn(`Error! - ${error}`);
+//    });
+
+
+async function buses() {
+    try{
+        let response = await fetch('https://api.metro.net/agencies/lametro/vehicles')
+        let data = await response.json()
+        let autobus = await data.items
+        for(let i = 0; i < autobus.length; i++) {
+            let lat = autobus[i].latitude
+            let long = autobus[i].longitude
+            let id = autobus[i].id
+            L.marker([lat, long]).bindPopup(`Este es el id: ${id}`).addTo(map)
+        } 
+        
+    }
+    catch{}
+}
+
+buses()
+
+
+//    fetch('https://api.metro.net/agencies/lametro/vehicles')
+//     .then(res => res.json())
+//     .then(json => console.log(json))
